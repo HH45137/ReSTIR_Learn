@@ -8,6 +8,10 @@ def gt_f(x):
     return g1 + g2
 
 
+def uf_f(x):
+    return x + 0
+
+
 def mis_f(x):
     return x + 1
 
@@ -19,6 +23,9 @@ def ris_f(x):
 gt_x = np.linspace(0, 1, 1000)
 gt_y = gt_f(gt_x)
 
+uf_x = np.linspace(0, 1, 1000)
+uf_y = uf_f(uf_x)
+
 mis_x = np.linspace(0, 1, 1000)
 mis_y = mis_f(mis_x)
 
@@ -28,7 +35,8 @@ ris_y = ris_f(ris_x)
 fig, ax = plt.subplots(figsize=(8, 3.5))
 
 ax.plot(gt_x, gt_y, color="orange", linewidth=2, label="GT")
-ax.plot(mis_x, mis_y, color="red", linewidth=2, label="MIS")
+ax.plot(uf_x, uf_y, color="red", linewidth=2, label="Uniform")
+ax.plot(mis_x, mis_y, color="green", linewidth=2, label="MIS")
 ax.plot(ris_x, ris_y, color="blue", linewidth=2, label="RIS")
 
 ax.set_xlim(-0.05, 1.05)
