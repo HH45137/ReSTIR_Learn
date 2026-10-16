@@ -1,16 +1,42 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.stats as stats
 
 GT_STEP = 512
 APR_STEP = 64
 
 rng = np.random.default_rng(seed=1919)
 
+wave_peak_norm_01 = 0.2
+wave_peak_sub_01 = 0.05
+wave_peak_norm_02 = 0.8
+wave_peak_sub_02 = 0.1
+
+
+def normalized(arr):
+    arr_min = arr.min()
+    arr_max = arr.max()
+    normalized = (arr - arr_min) / (arr_max - arr_min)
+    return normalized
+
+
+def gt_pdf_f(x):
+    def pdf(x, norm, sub):
+        return stats.norm.pdf(x, norm, sub)
+
+    def pdf1(x):
+        return pdf(x, wave_peak_norm_01, wave_peak_sub_01)
+
+    def pdf2(x):
+        return pdf(x, wave_peak_norm_02, wave_peak_sub_02)
+
+    return normalized(pdf1(x)) + normalized(pdf2(x))
+
 
 def gt_f(x):
-    g1 = 0.8 * np.exp(-((x - 0.2) ** 2) / (2 * 0.05**2))
-    g2 = 0.6 * np.exp(-((x - 0.8) ** 2) / (2 * 0.1**2))
-    return 0.01 + g1 + g2
+    g1 = np.exp(-((x - wave_peak_norm_01) ** 2) / (2 * wave_peak_sub_01**2))
+    g2 = np.exp(-((x - wave_peak_norm_02) ** 2) / (2 * wave_peak_sub_02**2))
+    return g1 + g2
 
 
 def uf_f(x):
@@ -18,7 +44,8 @@ def uf_f(x):
 
 
 def mis_f(x):
-    return rng.uniform(high=1, low=0, size=np.asarray(x).shape)
+    pdf = gt_pdf_f(x)
+    return pdf
 
 
 def ris_f(x):
